@@ -80,6 +80,9 @@ for l in r.text.split("\n"):
 
 if os.path.exists(OUTPUT):
     c = Calendar(open(OUTPUT).read())
+elif "URL_ICS" in os.environ:
+    ics = requests.get(os.environ['URL_ICS']).text
+    c = Calendar(ics)
 else:
     c = Calendar()
 
