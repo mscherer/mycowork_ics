@@ -66,7 +66,7 @@ current_month = 0
 r = requests.get(URL, params = payload)
 for l in r.text.split("\n"):
     for m in months:
-        if l.startswith(m['abbr']):
+        if l.startswith(m['abbr']) and not '-' in l:
             if current_month > m['num'] and current_month != 0:
                 year += 1
             current_month = m['num']
