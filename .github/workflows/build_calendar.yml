@@ -1,0 +1,41 @@
+name: Publish docs via GitHub Pages
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  build:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Run the conversion
+        run: |
+          sudo apt-get install language-pack-fr
+          locale -a
+          sudo dpkg-reconfigure locales
+          locale -a
+          pip install ics requests
+          python ./convert_ics.py
+          mkdir -p $DEST
+          cp index.html mycowork.ics $DEST
+        env:
+          DEST: _site
+          URL_ICS: https://mscherer.github.io/mycowork_ics/mycowork.ics  
+      - name: Deploy to GitHub Pages
+        uses: Cecilapp/GitHub-Pages-deploy@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          email: mscherer@localhost
+          build_dir: _site
+          branch: gh-pages 
+
+    # https://github.com/marketplace/actions/gh-pages-deploy            

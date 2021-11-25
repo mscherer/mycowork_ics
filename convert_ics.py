@@ -42,7 +42,7 @@ def convert_accent(s):
     return s.upper()[:3]
 
 # should use a external lib, but months are not gonna change that often
-locale.setlocale(locale.LC_TIME, "fr_FR")
+locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
 
 months=[]
 for i in range(1,13):
