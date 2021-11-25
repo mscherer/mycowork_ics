@@ -4,9 +4,14 @@ import locale
 from datetime import date, datetime, time
 import re
 from zoneinfo import ZoneInfo
+from ics import Calendar, Event
+import os
+import hashlib
 
 DOC_ID="1P2Y8euVlHhi8cacK-lJhlLg72hnTMMWPnmkZpd94gk4"
 URL="https://docs.google.com/document/export"
+
+OUTPUT = 'mycowork.ics'
 
 payload = {
     "format": "txt",
@@ -73,12 +78,24 @@ for l in r.text.split("\n"):
             day = int(re.search(r'^\d+', day).group())
             events.append({'date': date(year, current_month, day), 'event_raw': event.strip()})
 
+if os.path.exists(OUTPUT):
+    c = Calendar(open(OUTPUT).read())
+else:
+    c = Calendar()
+
 for e in events:
     d = e['date']
-    heure, event = e['event_raw'].split(' ', 1)
+    heure, name = e['event_raw'].split(' ', 1)
     debut, fin = heure.split('-')
     debut_iso = convert_iso(d, convert_hour(debut))
     fin_iso = convert_iso(d, convert_hour(fin))
-    print(debut_iso)
-    print(fin_iso)
-    print(event)
+
+    uid = hashlib.md5((debut_iso.isoformat() + name).encode()).hexdigest()
+    ev = Event(name=name,
+               uid=uid,
+               begin=debut_iso,
+               end=fin_iso)
+    c.events.add(ev)
+
+with open(OUTPUT, 'w') as f:
+    f.write(str(c))
