@@ -28,7 +28,7 @@ jobs:
           cp index.html mycowork.ics $DEST
         env:
           DEST: _site
-          URL_ICS: https://mscherer.github.io/mycowork_ics/mycowork.ics  
+            #        URL_ICS: https://mscherer.github.io/mycowork_ics/mycowork.ics  
       - name: Deploy to GitHub Pages
         uses: Cecilapp/GitHub-Pages-deploy@v3
         env:
