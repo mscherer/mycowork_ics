@@ -61,13 +61,13 @@ for i in range(1,8):
 year = int(datetime.utcnow().strftime('%Y'))
 events = []
 
-current_month = 13
+current_month = 0
 
 r = requests.get(URL, params = payload)
 for l in r.text.split("\n"):
     for m in months:
         if l.startswith(m['abbr']):
-            if current_month < m['num']:
+            if current_month > m['num'] and current_month != 0:
                 year += 1
             current_month = m['num']
 
